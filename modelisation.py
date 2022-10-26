@@ -70,10 +70,10 @@ class Modelisation:
         self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         
         self.dessineCroix(position)
-        cv2.putText(self.image, "Image "+str(self.imageEnCours), (30, 270),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(self.image, "IMAGE "+str(self.imageEnCours), (30, 270),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.25, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.imwrite('img.png',self.image)
-        dispImg = display.Image(filename='img.png',width = 600, height = 600)
+        dispImg = display.Image(filename='img.png',width = 700, height = 700)
         display.update_display(dispImg,display_id='essai')
         time.sleep(0.3)
         self.imageEnCours = self.imageEnCours +1
@@ -92,14 +92,14 @@ class Modelisation:
         pix = self.metersToPixel(position)
         pix = Vecteur(pix.x, self.nbLignes-pix.y)
         # print(pix)
-        tailleCroix = 3
+        tailleCroix = 5
         color = (255, 255, 255)
         cv2.line(self.image, (pix.x-tailleCroix, pix.y-tailleCroix),
                  (pix.x+tailleCroix, pix.y+tailleCroix), color, 2)
         cv2.line(self.image, (pix.x+tailleCroix, pix.y-tailleCroix),
                  (pix.x-tailleCroix, pix.y+tailleCroix), color, 2)
-        cv2.putText(self.image, "Modele", (pix.x, pix.y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 1, cv2.LINE_AA)
+        cv2.putText(self.image, "PREVISION", (pix.x, pix.y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.25, color, 1, cv2.LINE_AA)
 
     def dessineVecteur(self, vposition, vecteur, echelle=0.5):
         end_point = vposition+vecteur*echelle
