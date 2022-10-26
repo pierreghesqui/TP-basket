@@ -2,6 +2,7 @@ import cv2
 from vecteur import Vecteur
 import numpy as np
 import IPython.display as display
+import time
 class Modelisation:
     def __init__(self):
         
@@ -57,7 +58,7 @@ class Modelisation:
         cv2.imwrite('img.png',self.image)
         dispImg = display.Image(filename='img.png',width = 500, height = 500)
         display.update_display(dispImg,display_id='essai')
-        cv2.waitKey(200)
+        time.sleep(0.300)
         self.imageEnCours = self.imageEnCours +1
         
     def metersToPixel(self, lc):
