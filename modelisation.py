@@ -64,16 +64,44 @@ class Modelisation:
         self.vitesses = []
         d=display.display('test', display_id='essai')
 
-    def show(self, position, vitesse):
+    def show(self, position, vitesse,F):
         self.image = imageio.imread(
             'frames/basket/frame'+str(self.imageEnCours)+'.png')
         self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         
+        
+        cv2.putText(self.image, "IMAGE "+str(self.imageEnCours), (30, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.25, (255, 255, 255), 2, cv2.LINE_AA)
+        
+        if vitesse.x !=0 and vitesse.y!=0:
+            start_point = self.metersToPixel(position)
+            start_point = Vecteur(start_point.x, self.nbLignes-start_point.y)
+            
+            end_point = position+vitesse/10
+            end_point = self.metersToPixel(end_point)
+            end_point = Vecteur(end_point.x, self.nbLignes-end_point.y)
+            color = (0, 255, 0) #BGR
+            thickness = 5
+            cv2.arrowedLine(self.image, (start_point.x,start_point.y), (end_point.x,end_point.y),
+                                         color, thickness)
+            cv2.putText(self.image, "v ", (end_point.x-10,end_point.y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.25, color, 2, cv2.LINE_AA)
+            cv2.arrowedLine(self.image, (end_point.x-10,end_point.y-35), (end_point.x+10,end_point.y-35),
+                                         color, 2)
+        if  F.y!=0 : #self.imageEnCours == 3 and
+            end_point = position+F/10
+            end_point = self.metersToPixel(end_point)
+            end_point = Vecteur(end_point.x, self.nbLignes-end_point.y)
+            colorForce = (0, 0, 255) #BGR
+            cv2.arrowedLine(self.image, (start_point.x,start_point.y), (end_point.x,end_point.y),
+                                         colorForce, thickness)
+            cv2.putText(self.image, "F ", (end_point.x+20,end_point.y-20),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.25, colorForce, 2, cv2.LINE_AA)
+            cv2.arrowedLine(self.image, (end_point.x+20,end_point.y-50), (end_point.x+50,end_point.y-50),
+                                         colorForce, 2)
         self.dessineCroix(position)
-        cv2.putText(self.image, "IMAGE "+str(self.imageEnCours), (30, 270),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.25, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.imwrite('img.png',self.image)
-        dispImg = display.Image(filename='img.png',width = 700, height = 700)
+        dispImg = display.Image(filename='img.png',width = 500, height = 500)
         display.update_display(dispImg,display_id='essai')
         time.sleep(0.3)
         self.imageEnCours = self.imageEnCours +1
@@ -92,15 +120,16 @@ class Modelisation:
         pix = self.metersToPixel(position)
         pix = Vecteur(pix.x, self.nbLignes-pix.y)
         # print(pix)
-        tailleCroix = 5
+        tailleCroix = 8
         color = (255, 255, 255)
         cv2.line(self.image, (pix.x-tailleCroix, pix.y-tailleCroix),
                  (pix.x+tailleCroix, pix.y+tailleCroix), color, 2)
         cv2.line(self.image, (pix.x+tailleCroix, pix.y-tailleCroix),
                  (pix.x-tailleCroix, pix.y+tailleCroix), color, 2)
+        '''
         cv2.putText(self.image, "PREVISION", (pix.x, pix.y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.25, color, 1, cv2.LINE_AA)
-
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.25, color, 2, cv2.LINE_AA)
+        '''
     def dessineVecteur(self, vposition, vecteur, echelle=0.5):
         end_point = vposition+vecteur*echelle
         # print(position)
