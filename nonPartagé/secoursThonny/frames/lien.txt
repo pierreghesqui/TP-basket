@@ -1,1 +1,0 @@
-https://mybinder.org/v2/gh/pierreghesqui/TP-basket/main?labpath=TP-Basket.ipynb
