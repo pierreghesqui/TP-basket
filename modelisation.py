@@ -1,73 +1,27 @@
 import cv2
 from vecteur import Vecteur
-import os
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 import IPython.display as display
-import time
-import imageio
 class Modelisation:
     def __init__(self):
-        def click_event(event, x, y, flags, params):
-
-            f = open("etalonnage.txt", 'a')
-            if event == cv2.EVENT_LBUTTONDOWN:
-                # print(x,y)
-                f.write(str(x) + ',')
-                f.write(str(y)+',')
-            f.close()
+        
         self.ecranLargeur = 1920
         self.ecranHauteur = 1080
-        f = open("etalonnage.txt", 'r+')
-        self.imageEnCours = 0
         
-        self.image = cv2.imread("frames/basket/frame11.png")
+        self.imageEnCours = 0
+        self.image = cv2.imread("frames/basket/frame0.png")
         self.nbLignes = self.image.shape[0]
         self.nbColonnes = self.image.shape[1]
-
+        self.pixelSize = 0.00876  #metre par pixel
         self.ratioFenetre = self.nbColonnes/self.nbLignes
-        # print ("l'image contient ", self.nbLignes, "lignes et " ,self.nbColonnes, " colonnes")
-        filesize = os.path.getsize("etalonnage.txt")
-        if filesize == 0:
-            cv2.namedWindow('mon image', cv2.WINDOW_NORMAL)
-            cv2.moveWindow('mon image', int(self.ecranLargeur/2), 10)
-            cv2.resizeWindow('mon image', int(
-                self.ecranHauteur*0.75*self.ratioFenetre), int(self.ecranHauteur*0.75))
-            cv2.setWindowProperty('mon image', cv2.WND_PROP_TOPMOST, 1)
-            cv2.imshow('mon image', self.image)
-            cv2.setMouseCallback('mon image', click_event)
-            cv2.waitKey()
-            cv2.destroyAllWindows()
-            with open("etalonnage.txt", "r") as filestream:
-                for line in filestream:
-                    currentline = line.split(",")
-
-            nbPixel = int(((int(currentline[3])-int(currentline[1]))
-                          ** 2+(int(currentline[2])-int(currentline[0]))**2)**0.5)
-            distanceMetre = float(input("Quelle est la distance mesurée ?"))
-            self.pixelSize = distanceMetre/nbPixel
-            f = open("etalonnage.txt", 'a')
-            f.truncate(0)
-            f.write(str(self.pixelSize))
-
-        else:
-            with open("etalonnage.txt", "r") as filestream:
-                for line in filestream:
-                    currentline = line.split(",")
-            self.pixelSize = float(currentline[0])
-        _, _, files = next(os.walk("frames/basket"))
-        file_count = len(files)
-        self.nbImages = file_count-1
-        f.close()
+        self.nbImages = 39
         self.positions = []
         self.vitesses = []
         d=display.display('test', display_id='essai')
 
     def show(self, position, vitesse,F):
-        self.image = imageio.imread(
+        self.image = cv2.imread(
             'frames/basket/frame'+str(self.imageEnCours)+'.png')
-        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         
         
         cv2.putText(self.image, "IMAGE "+str(self.imageEnCours), (30, 30),
@@ -103,7 +57,7 @@ class Modelisation:
         cv2.imwrite('img.png',self.image)
         dispImg = display.Image(filename='img.png',width = 500, height = 500)
         display.update_display(dispImg,display_id='essai')
-        time.sleep(0.3)
+        cv2.waitKey(200)
         self.imageEnCours = self.imageEnCours +1
         
     def metersToPixel(self, lc):
@@ -142,12 +96,4 @@ class Modelisation:
         self.image = cv2.arrowedLine(self.image, (vposition.x, vposition.y), (end_point.x,
                                      end_point.y), (255, 255, 0), 2)
 
-    def showVecteur(self, vPos, vVitesse) :
-         with imageio.get_writer('modelisationVecteur.gif', mode='I',fps=2) as writer:
-             # print(listFichier)
-             for i  in range(len(vVitesse)):
-                 self.image = imageio.imread('frames/basket/frame'+str(i)+'.png')
-                 self.dessineCroix(vPos[i])
-                 self.dessineVecteur(vPos[i],vVitesse[i])
-                 writer.append_data(self.image)
   
