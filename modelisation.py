@@ -20,7 +20,7 @@ class Modelisation:
         self.ecranLargeur = 1920
         self.ecranHauteur = 1080
         f = open("etalonnage.txt", 'r+')
-        self.imageEnCours = 3
+        self.imageEnCours = 0
         
         self.image = cv2.imread("frames/basket/frame11.png")
         self.nbLignes = self.image.shape[0]
