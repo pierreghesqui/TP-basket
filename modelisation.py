@@ -58,7 +58,7 @@ class Modelisation:
         cv2.imwrite('img.png',self.image)
         dispImg = display.Image(filename='img.png',width = 500, height = 500)
         display.update_display(dispImg,display_id='essai')
-        time.sleep(0.300)
+        time.sleep(0.200)
         self.imageEnCours = self.imageEnCours +1
         
     def metersToPixel(self, lc):
